@@ -18,25 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const toyForm = document.querySelector(".add-toy-form")
   toyForm.addEventListener("submit", handleForm)
 
-
+//fetch data and build toy cards 
   fetch("http://localhost:3000/toys")
     .then(resp => resp.json())
     .then(data => data.forEach(toy => buildToyCard(toy)))
  
 
 
-   function handlePatchRequest(toy, newLikes){
-    fetch(`http://localhost:3000/toys/${toy}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({"likes": newLikes })
-       })
-       .then(data => data.json);
-   } 
-
   function buildToyCard(toy){
+    //create toyCards
     const toyCards = document.createElement("div")
     toyCards.classList.add("card");
     toyCards.innerHTML = `<h2>${toy.name}</h2><img src=${toy.image} class='toy-avatar'/><p>${toy.likes}</p><button class='like-btn' id="${toy.id}">Like</button>`
@@ -44,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toyCollection.append(toyCards); 
     
     const btn = document.getElementById(toy.id)
-
+    //add event listener to each button
     btn.addEventListener("click", (event) => {
       const p = event.target.previousElementSibling
       const newLikes = parseInt(p.textContent) + 1
@@ -55,6 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+  function handlePatchRequest(toy, newLikes){
+    fetch(`http://localhost:3000/toys/${toy}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"likes": newLikes })
+       })
+       .then(data => data.json);
+   } 
 
   // function increaseLikes(id){
   //   const p = document.querySelector(".card p")
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // }
 
 
-
+//create new card from form 
   function handleForm(e){
     e.preventDefault();
 
@@ -87,9 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       body: JSON.stringify(newToy)
     }).then(data => data.json)
-  
-    console.log(newToy)
-   
   }
  
 
